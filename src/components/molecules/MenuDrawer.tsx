@@ -1,5 +1,4 @@
 import { memo, VFC } from "react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import {
   Button,
   Drawer,
@@ -11,18 +10,33 @@ import {
 type Props = {
   onClose: () => void;
   isOpen: boolean;
+  onClickHome: () => void;
+  onClickonClickUserManagement: () => void;
+  onClickSetting: () => void;
 };
 
 export const MenuDrawer: VFC<Props> = memo((props) => {
-  const { isOpen, onClose } = props;
+  const {
+    isOpen,
+    onClose,
+    onClickSetting,
+    onClickHome,
+    onClickonClickUserManagement
+  } = props;
   return (
     <Drawer placement="left" size="xs" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay>
         <DrawerContent>
           <DrawerBody p={0} bg="gray.100">
-            <Button w="100%">Top</Button>
-            <Button w="100%">ユーザー一覧</Button>
-            <Button w="100%">設定</Button>
+            <Button w="100%" onClick={onClickHome}>
+              Top
+            </Button>
+            <Button w="100%" onClick={onClickonClickUserManagement}>
+              ユーザー一覧
+            </Button>
+            <Button w="100%" onClick={onClickSetting}>
+              設定
+            </Button>
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
