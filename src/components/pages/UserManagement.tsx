@@ -10,16 +10,27 @@ import {
 
 import { UserCard } from "../organisms/user/UserCard";
 import { useAllUser } from "../../hooks/useAllUser";
+import { useSelectUser } from "../../hooks/useSelectUser";
 import { UserDetailModal } from "../organisms/user/UserDetailModal";
 
 export const UserManagement: VFC = memo(() => {
   const { getUsers, loading, users } = useAllUser();
+  const { onSelectUser, selectUser } = useSelectUser();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const onClickUser = useCallback(() => {
-    onOpen();
-  }, []);
+  console.log(selectUser);
+
+  // useCallbackの第二引数(依存配列)に何も指定していないので、初期状態のonSelectUserが実行され、表示される
+  // usersの情報が初期状態のまま
+  // 第二引数(依存配列)にusersを指定することで、usersが変更されるたびにonSelectUserの引数を設定しなおす必要がある
+  const onClickUser = useCallback(
+    (id: number) => {
+      console.log(id);
+      onSelectUser({ id, users, onOpen });
+    },
+    [users, onSelectUser, onOpen]
+  );
 
   useEffect(() => {
     getUsers();
@@ -36,6 +47,7 @@ export const UserManagement: VFC = memo(() => {
           {users.map((user) => (
             <WrapItem key={user.id} mx="auto">
               <UserCard
+                id={user.id}
                 imageUrl="https://source.unsplash.com/random"
                 userName={user.username}
                 fullName={user.name}
@@ -45,7 +57,7 @@ export const UserManagement: VFC = memo(() => {
           ))}
         </Wrap>
       )}
-      <UserDetailModal isOpen={isOpen} onClose={onClose} />
+      <UserDetailModal isOpen={isOpen} onClose={onClose} user={selectUser} />
     </>
   );
 });
