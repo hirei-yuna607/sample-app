@@ -22,8 +22,8 @@ export const UserManagement: VFC = memo(() => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  console.log(selectUser);
-  console.log(loginUser);
+  // console.log(selectUser);
+  // console.log(loginUser);
 
   // useCallbackの第二引数(依存配列)に何も指定していないので、初期状態のonSelectUserが実行され、表示される
   // usersの情報が初期状態のまま
@@ -61,7 +61,12 @@ export const UserManagement: VFC = memo(() => {
           ))}
         </Wrap>
       )}
-      <UserDetailModal isOpen={isOpen} onClose={onClose} user={selectUser} />
+      <UserDetailModal
+        isOpen={isOpen}
+        onClose={onClose}
+        user={selectUser}
+        isAdmin={loginUser?.isAdmin}
+      />
     </>
   );
 });
