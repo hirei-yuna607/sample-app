@@ -1,12 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { memo, VFC, useEffect } from "react";
-import { Center, Spinner, Wrap, WrapItem } from "@chakra-ui/react";
+import { memo, VFC, useEffect, useCallback } from "react";
+import {
+  Center,
+  Spinner,
+  useDisclosure,
+  Wrap,
+  WrapItem
+} from "@chakra-ui/react";
 
 import { UserCard } from "../organisms/user/UserCard";
 import { useAllUser } from "../../hooks/useAllUser";
+import { UserDetailModal } from "../organisms/user/UserDetailModal";
 
 export const UserManagement: VFC = memo(() => {
   const { getUsers, loading, users } = useAllUser();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onClickUser = useCallback(() => {
+    onOpen();
+  }, []);
 
   useEffect(() => {
     getUsers();
@@ -26,11 +39,13 @@ export const UserManagement: VFC = memo(() => {
                 imageUrl="https://source.unsplash.com/random"
                 userName={user.username}
                 fullName={user.name}
+                onClick={onClickUser}
               />
             </WrapItem>
           ))}
         </Wrap>
       )}
+      <UserDetailModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 });
