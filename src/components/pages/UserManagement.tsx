@@ -9,17 +9,21 @@ import {
 } from "@chakra-ui/react";
 
 import { UserCard } from "../organisms/user/UserCard";
+import { UserDetailModal } from "../organisms/user/UserDetailModal";
+
 import { useAllUser } from "../../hooks/useAllUser";
 import { useSelectUser } from "../../hooks/useSelectUser";
-import { UserDetailModal } from "../organisms/user/UserDetailModal";
+import { useLoginUser } from "../../hooks/useLoginUser";
 
 export const UserManagement: VFC = memo(() => {
   const { getUsers, loading, users } = useAllUser();
   const { onSelectUser, selectUser } = useSelectUser();
+  const { loginUser } = useLoginUser();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   console.log(selectUser);
+  console.log(loginUser);
 
   // useCallbackの第二引数(依存配列)に何も指定していないので、初期状態のonSelectUserが実行され、表示される
   // usersの情報が初期状態のまま

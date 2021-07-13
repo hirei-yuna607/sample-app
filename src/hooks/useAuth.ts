@@ -6,6 +6,8 @@ import { useHistory } from "react-router-dom";
 import { User } from "../types/api/user";
 import { useMessage } from "./useMessage";
 
+import { useLoginUser } from "../hooks/useLoginUser";
+
 export const useAuth = () => {
   const history = useHistory();
 
@@ -13,23 +15,30 @@ export const useAuth = () => {
 
   const { showMessage } = useMessage();
 
-  const login = useCallback((id: string) => {
-    setLoading(true);
+  const { setLoginUser } = useLoginUser();
 
-    axios
-      .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .then((res) => {
-        if (res.data) {
-          showMessage({ title: "ログインしました", status: "success" });
-          history.push("/home");
-        } else {
-          showMessage({ title: "ユーザーが見つかりません", status: "error" });
-        }
-      })
-      .catch(() =>
-        showMessage({ title: "ログインできません", status: "warning" })
-      )
-      .finally(() => setLoading(false));
-  }, []);
-  return { login, loading };
+  const login = useCallback(
+    (id: string) => {
+      setLoading(true);
+
+      axios
+        .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
+        .then((res) => {
+          if (res.data) {
+            setLoginUser(res.data);
+            showMessage({ title: "ログインしました", status: "success" });
+            history.push("/home");
+          } else {
+            showMessage({ title: "ユーザーが見つかりません", status: "error" });
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          showMessage({ title: "ログインできません", status: "warning" });
+          setLoading(false);
+        });
+    },
+    [history, showMessage, setLoginUser]
+  );
+  return { login, loading, setLoginUser };
 };
